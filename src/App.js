@@ -10,26 +10,23 @@ function App() {
   const [meetings, setMeetings] = useState([]);
   const [serviceBodies, setServiceBodies] = useState([]);
   useEffect(() => {
-    axios({
-      url: getServiceBodies,
-      adapter: jsonpAdapter,
-    })
-      .then((res) => {
-        setServiceBodies(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    axios({
-      url: getMeetings,
-      adapter: jsonpAdapter,
-    })
-      .then((res) => {
-        setMeetings(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const fetchData = async () => {
+      try {
+        const meetingsData = await axios({
+          url: getMeetings,
+          adapter: jsonpAdapter,
+        });
+        const serviceBodyData = await axios({
+          url: getServiceBodies,
+          adapter: jsonpAdapter,
+        });
+        setMeetings(meetingsData.data);
+        setServiceBodies(serviceBodyData.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
   }, []);
   if (!meetings.length) {
     return null;
